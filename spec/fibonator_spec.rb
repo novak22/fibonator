@@ -3,9 +3,6 @@
 require_relative '../lib/fibonator'
 
 RSpec.describe Fibonator do
-  after(:all) do
-    persist_profile_log
-  end
 
   it 'has a version number' do
     expect(Fibonator::VERSION).not_to be nil
