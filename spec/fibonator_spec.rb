@@ -61,13 +61,15 @@ RSpec.describe Fibonator do
     expect(subject.nth_element(1000).to_s.length).to eq(209)
   end
 
-  it 'nth element is 10078' do
-    expect(subject.nth_element(10078).to_s.length).to eq(2106)
-  end
 
 
   describe 'big numbers' do
     before { skip }
+
+    it 'nth element is 10078' do
+      expect(subject.nth_element(10078).to_s.length).to eq(2106)
+    end
+
     it 'nth element is 100078' do
       expect(subject.nth_element(100078).to_s.length).to eq(20915)
     end
