@@ -83,12 +83,13 @@ RSpec.describe Fibonator do
   describe 'calculator limits' do
     let(:over_soft_limit_message){/Number too big/}
     context 'matrix' do
+      let(:calculator){ :matrix }
       it 'numbers >11000' do
-        expect { subject.nth_element(11001) }.not_to raise_error
+        expect { subject.nth_element(11001, calculator: calculator) }.not_to raise_error
       end
       it 'numbers >10_000_000' do
-        expect { subject.nth_element(1_000_000) }.not_to raise_error
-        expect { subject.nth_element(10_000_001) }.to raise_error(ArgumentError, over_soft_limit_message)
+        expect { subject.nth_element(1_000_000, calculator: calculator) }.not_to raise_error
+        expect { subject.nth_element(10_000_001, calculator: calculator) }.to raise_error(ArgumentError, over_soft_limit_message)
       end
     end
 

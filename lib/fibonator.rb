@@ -4,7 +4,9 @@ require "fibonator/calculate"
 module Fibonator
   extend self
 
-  def nth_element(nth, soft_limit: nil, calculator: :matrix)
+  DEFAULT_CALCULATOR = :matrix
+
+  def nth_element(nth, soft_limit: nil, calculator: DEFAULT_CALCULATOR)
     raise ArgumentError, 'Only numbers are allowed' unless valid_argument?(nth)
 
     nth = nth.to_i if nth.is_a?(String)
@@ -16,7 +18,7 @@ module Fibonator
     calculator.nth_element(nth)
   end
 
-  def soft_limit calculator = :matrix
+  def soft_limit calculator = DEFAULT_CALCULATOR
     calculator = Fibonator::Calculate.new(calculator)
     calculator.soft_limit
   end
