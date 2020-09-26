@@ -12,7 +12,9 @@ module Fibonator
     nth = nth.to_i if nth.is_a?(String)
     raise ArgumentError, "Number too big. Limit set to: #{soft_limit}" if out_of_limit?(nth, soft_limit)
 
-    Fibonator::Calculate.nth_element(nth, calculator: calculator)
+    calculator = Fibonator::Calculate.new(calculator)
+
+    calculator.nth_element(nth)
   end
 
   private
