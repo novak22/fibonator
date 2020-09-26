@@ -1,6 +1,8 @@
 module Calculators
-  class Recursive
+  class RecursiveCalculator
     attr_accessor :nth_array
+
+    SOFT_LIMIT = 10_000
 
     def initialize
       @nth_array = {0 => 0, 1 => 1, 2 => 1}

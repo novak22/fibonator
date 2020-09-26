@@ -1,11 +1,35 @@
-require_relative 'calculators/recursive'
+require_relative 'calculators/recursive_calculator'
+require_relative 'calculators/matrix_calculator'
 
 module Fibonator
   class Calculate
-    @nth_array = {0 => 0, 1 => 1, 2 => 1}
+    attr_accessor :calculator
 
-    def self.nth_element nth
-      Calculators::Recursive.new.call(nth)
+    def initialize calculator = :matrix
+      @calculator = calculator_class_from_symbol(calculator)
+      raise ArgumentError, "Invalid calculator" unless @calculator
+
+    end
+
+    def nth_element(nth)
+      @calculator.call(nth)
+    end
+
+    def soft_limit
+      @calculator.class::SOFT_LIMIT
+    end
+
+    private
+
+    def calculator_class_from_symbol(calculator_symbol)
+      case calculator_symbol
+      when :matrix
+        Calculators::MatrixCalculator.new
+      when :recursive
+        Calculators::RecursiveCalculator.new
+      else
+        false
+      end
     end
   end
 end

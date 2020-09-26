@@ -64,7 +64,7 @@ RSpec.describe Fibonator do
 
 
   describe 'big numbers' do
-    before { skip }
+    before { skip if described_class.soft_limit < 1000781 }
 
     it 'nth element is 10078' do
       expect(subject.nth_element(10078).to_s.length).to eq(2106)
@@ -79,14 +79,52 @@ RSpec.describe Fibonator do
     end
   end
 
-  describe 'soft limits' do
-    let(:soft_limit) { described_class::SOFT_LIMIT }
 
-    it 'raises argument error if over the limit' do
-      expect { subject.nth_element(soft_limit + 1) }.to raise_error(ArgumentError)
-      expect { subject.nth_element(10_000, soft_limit: 9_000) }.to raise_error(ArgumentError)
-      expect { subject.nth_element(soft_limit + 10_000) }.to raise_error(ArgumentError)
+  describe 'calculator limits' do
+    let(:over_soft_limit_message){/Number too big/}
+    context 'matrix' do
+      let(:calculator){ :matrix }
+      it 'numbers >11000' do
+        expect { subject.nth_element(11001, calculator: calculator) }.not_to raise_error
+      end
+      it 'numbers >10_000_000' do
+        expect { subject.nth_element(1_000_000, calculator: calculator) }.not_to raise_error
+        expect { subject.nth_element(10_000_001, calculator: calculator) }.to raise_error(ArgumentError, over_soft_limit_message)
+      end
     end
+
+    context 'recursive' do
+      it 'numbers >1100' do
+        expect { subject.nth_element(1101, calculator: :recursive) }.not_to raise_error
+      end
+
+      it 'numbers >11000' do
+        expect { subject.nth_element(11001, calculator: :recursive) }.to raise_error(ArgumentError, over_soft_limit_message)
+      end
+    end
+
+    context 'soft limits' do
+      let(:soft_limit) { described_class.soft_limit }
+
+      it 'raises argument error if over the limit' do
+        expect { subject.nth_element(soft_limit + 1) }.to raise_error(ArgumentError, over_soft_limit_message)
+        expect { subject.nth_element(10_000, soft_limit: 9_000) }.to raise_error(ArgumentError, over_soft_limit_message)
+        expect { subject.nth_element(soft_limit + 10_000) }.to raise_error(ArgumentError, over_soft_limit_message)
+      end
+    end
+
+    context 'soft limits rewrite' do
+      context 'recursive' do
+        let(:calculation_method){:recursive}
+        let(:soft_limit){subject.soft_limit(calculation_method)}
+
+        it 'overwrites soft limit' do
+          expect { subject.nth_element(soft_limit + 1, calculator: :recursive) }.to raise_error(ArgumentError, over_soft_limit_message)
+          expect { subject.nth_element(soft_limit + 1, calculator: :recursive, soft_limit: 0) }.not_to raise_error(ArgumentError, over_soft_limit_message)
+        end
+      end
+    end
+
   end
 
 end
