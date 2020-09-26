@@ -4,7 +4,7 @@ require "fibonator/calculate"
 module Fibonator
   extend self
 
-  SOFT_LIMIT = 10000
+  SOFT_LIMIT = 10000000
 
   def nth_element(nth, soft_limit: SOFT_LIMIT)
     raise ArgumentError, 'Only numbers are allowed' unless valid_argument?(nth)
