@@ -1,5 +1,5 @@
 module Calculators
-  class Recursive
+  class RecursiveCalculator
     attr_accessor :nth_array
 
     def initialize
