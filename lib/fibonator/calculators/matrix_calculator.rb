@@ -2,6 +2,8 @@ module Calculators
   class MatrixCalculator
     require 'matrix'
 
+    SOFT_LIMIT = 10_000_000
+
     def initialize
 
     end
