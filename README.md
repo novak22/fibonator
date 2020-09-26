@@ -33,6 +33,22 @@ To overwrite SOFT_LIMIT:
 Fibonator.nth_element(n, soft_limit: 0)
 ```
 
+To use different calculator:
+
+```ruby
+Fibonator.nth_element(n, calculator: :recursive)
+Fibonator.nth_element(n, calculator: :matrix)
+```
+
+To get recommended soft limit:
+
+```ruby
+Fibonator.soft_limit # for default calculator
+
+Fibonator.soft_limit(:recursive)
+Fibonator.soft_limit(:matrix)
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
