@@ -15,6 +15,10 @@ module Fibonator
       @calculator.call(nth)
     end
 
+    def soft_limit
+      @calculator.class::SOFT_LIMIT
+    end
+
     private
 
     def calculator_class_from_symbol(calculator_symbol)
