@@ -6,13 +6,13 @@ module Fibonator
 
   SOFT_LIMIT = 10000000
 
-  def nth_element(nth, soft_limit: SOFT_LIMIT)
+  def nth_element(nth, soft_limit: SOFT_LIMIT, calculator: :matrix)
     raise ArgumentError, 'Only numbers are allowed' unless valid_argument?(nth)
 
     nth = nth.to_i if nth.is_a?(String)
     raise ArgumentError, "Number too big. Limit set to: #{soft_limit}" if out_of_limit?(nth, soft_limit)
 
-    Fibonator::Calculate.nth_element(nth)
+    Fibonator::Calculate.nth_element(nth, calculator: calculator)
   end
 
   private
