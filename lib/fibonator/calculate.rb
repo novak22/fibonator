@@ -1,14 +1,14 @@
 require_relative 'calculators/recursive_calculator'
 require_relative 'calculators/matrix_calculator'
+require_relative 'calculators/dijkstra/calculator'
 
 module Fibonator
   class Calculate
     attr_accessor :calculator
 
-    def initialize calculator = :matrix
+    def initialize(calculator = :matrix)
       @calculator = calculator_class_from_symbol(calculator)
-      raise ArgumentError, "Invalid calculator" unless @calculator
-
+      raise ArgumentError, 'Invalid calculator' unless @calculator
     end
 
     def nth_element(nth)
@@ -27,6 +27,8 @@ module Fibonator
         Calculators::MatrixCalculator.new
       when :recursive
         Calculators::RecursiveCalculator.new
+      when :dijkstra
+        Calculators::Dijkstra::Calculator.new
       else
         false
       end
