@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Calculators
   module Dijkstra
     # Decomposes a positive integer into a list of unique components that can be used to calculate its corresponding Fibonacci number.

@@ -4,7 +4,7 @@ require_relative '../lib/fibonator'
 
 RSpec.describe Fibonator do
   shared_examples 'small numbers' do
-    it "correctly calculates nth element where n is small number" do
+    it 'correctly calculates nth element where n is small number' do
       expect(subject.nth_element(1, calculator: calculator)).to eq(1)
       expect(subject.nth_element(2, calculator: calculator)).to eq(1)
       expect(subject.nth_element(3, calculator: calculator)).to eq(2)
@@ -140,10 +140,10 @@ RSpec.describe Fibonator do
   end
 
   describe 'each calculator' do
-    [:recursive, :matrix, :dijkstra].each do |current_calculator|
+    %i[recursive matrix dijkstra].each do |current_calculator|
       context "testing calculator: #{current_calculator}" do
         let(:calculator) { :dijkstra }
-  
+
         it_behaves_like 'small numbers'
         it_behaves_like 'medium numbers'
       end
