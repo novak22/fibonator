@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'calculators/recursive_calculator'
-require_relative 'calculators/matrix_calculator'
+require_relative 'calculators/recursive/calculator'
+require_relative 'calculators/matrix/calculator'
 require_relative 'calculators/dijkstra/calculator'
 
 module Fibonator
