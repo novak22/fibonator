@@ -3,6 +3,31 @@
 require_relative '../lib/fibonator'
 
 RSpec.describe Fibonator do
+  shared_examples 'small numbers' do
+    it "correctly calculates nth element where n is small number" do
+      expect(subject.nth_element(1, calculator: calculator)).to eq(1)
+      expect(subject.nth_element(2, calculator: calculator)).to eq(1)
+      expect(subject.nth_element(3, calculator: calculator)).to eq(2)
+      expect(subject.nth_element(4, calculator: calculator)).to eq(3)
+      expect(subject.nth_element(5, calculator: calculator)).to eq(5)
+      expect(subject.nth_element(6, calculator: calculator)).to eq(8)
+      expect(subject.nth_element(7, calculator: calculator)).to eq(13)
+      expect(subject.nth_element(8, calculator: calculator)).to eq(21)
+      expect(subject.nth_element(9, calculator: calculator)).to eq(34)
+    end
+  end
+
+  shared_examples 'medium numbers' do
+    it 'correctly calculates nth element where n is medium number' do
+      expect(subject.nth_element(16, calculator: calculator)).to eq(987)
+      expect(subject.nth_element(27, calculator: calculator)).to eq(196_418)
+      expect(subject.nth_element(32, calculator: calculator)).to eq(2_178_309)
+      expect(subject.nth_element(37, calculator: calculator)).to eq(24_157_817)
+      expect(subject.nth_element(42, calculator: calculator)).to eq(267_914_296)
+      expect(subject.nth_element(45, calculator: calculator)).to eq(1_134_903_170)
+    end
+  end
+
   it 'has a version number' do
     expect(Fibonator::VERSION).not_to be nil
   end
@@ -20,39 +45,6 @@ RSpec.describe Fibonator do
 
   it 'nth element is 0' do
     expect(subject.nth_element(0)).to eq(0)
-  end
-
-  it 'nth element is 1' do
-    expect(subject.nth_element(1)).to eq(1)
-  end
-
-  it 'nth element is 2' do
-    expect(subject.nth_element(2)).to eq(1)
-  end
-
-  it 'nth element is small number' do
-    expect(subject.nth_element(3)).to eq(2)
-    expect(subject.nth_element(4)).to eq(3)
-    expect(subject.nth_element(5)).to eq(5)
-    expect(subject.nth_element(6)).to eq(8)
-    expect(subject.nth_element(7)).to eq(13)
-    expect(subject.nth_element(8)).to eq(21)
-    expect(subject.nth_element(9)).to eq(34)
-  end
-
-  it 'nth element is medium number' do
-    expect(subject.nth_element(16)).to eq(987)
-    expect(subject.nth_element(27)).to eq(196_418)
-    expect(subject.nth_element(32)).to eq(2_178_309)
-    expect(subject.nth_element(37)).to eq(24_157_817)
-  end
-
-  it 'nth element is 42' do
-    expect(subject.nth_element(42)).to eq(267_914_296)
-  end
-
-  it 'nth element is 45' do
-    expect(subject.nth_element(45)).to eq(1_134_903_170)
   end
 
   it 'nth element is 1000' do
@@ -143,6 +135,17 @@ RSpec.describe Fibonator do
                                                 soft_limit: 0)
           end.not_to raise_error
         end
+      end
+    end
+  end
+
+  describe 'each calculator' do
+    [:recursive, :matrix, :dijkstra].each do |current_calculator|
+      context "testing calculator: #{current_calculator}" do
+        let(:calculator) { :dijkstra }
+  
+        it_behaves_like 'small numbers'
+        it_behaves_like 'medium numbers'
       end
     end
   end
