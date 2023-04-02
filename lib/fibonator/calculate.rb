@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'calculators/recursive_calculator'
 require_relative 'calculators/matrix_calculator'
 require_relative 'calculators/dijkstra/calculator'
@@ -6,7 +8,9 @@ module Fibonator
   class Calculate
     attr_accessor :calculator
 
-    def initialize(calculator = :matrix)
+    DEFAULT_CALCULATOR = :dijkstra
+
+    def initialize(calculator = DEFAULT_CALCULATOR)
       @calculator = calculator_class_from_symbol(calculator)
       raise ArgumentError, 'Invalid calculator' unless @calculator
     end
