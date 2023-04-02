@@ -10,7 +10,7 @@ require 'fibonator/calculate'
 module Fibonator
   extend self
 
-  DEFAULT_CALCULATOR = :matrix
+  DEFAULT_CALCULATOR = :dijkstra
 
   def nth_element(nth, soft_limit: nil, calculator: DEFAULT_CALCULATOR)
     raise ArgumentError, 'Only numbers are allowed' unless valid_argument?(nth)
