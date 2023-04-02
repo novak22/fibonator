@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'calculators/recursive/calculator'
-require_relative 'calculators/matrix/calculator'
+require_relative 'calculators/matrix_calculator/calculator'
 require_relative 'calculators/dijkstra/calculator'
 
 module Fibonator
@@ -28,9 +28,9 @@ module Fibonator
     def calculator_class_from_symbol(calculator_symbol)
       case calculator_symbol
       when :matrix
-        Calculators::MatrixCalculator.new
+        Calculators::MatrixCalculator::Calculator.new
       when :recursive
-        Calculators::RecursiveCalculator.new
+        Calculators::Recursive::Calculator.new
       when :dijkstra
         Calculators::Dijkstra::Calculator.new
       else
