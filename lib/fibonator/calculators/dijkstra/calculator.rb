@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Calculators
   module Dijkstra
     class Calculator
@@ -7,49 +9,51 @@ module Calculators
       SOFT_LIMIT = 100_000_000
 
       def initialize(decomposer = DEFAULT_DECOMPOSER)
-        @fibs = INITIAL_FIBS.dup
+        @fibonacci_map = INITIAL_FIBS.dup
         @decomposer = decomposer.new
       end
 
-      def call(n)
-        final_element_sign = sign(n)
-        n = n.abs
+      def call(nth)
+        final_element_sign = sign(nth)
+        nth = nth.abs
 
-        return @fibs[n] * final_element_sign if @fibs.key?(n)
+        return @fibonacci_map[nth] * final_element_sign if @fibonacci_map.key?(nth)
 
-        components = @decomposer.call(n)
+        components = @decomposer.call(nth)
 
         components.reverse_each do |e|
-          next if @fibs[e]
+          next if @fibonacci_map[e]
 
-          @fibs[e] = calculate_fibonacci(e)
+          @fibonacci_map[e] = calculate_fibonacci(e)
         end
 
-        @fibs[n] * final_element_sign
+        @fibonacci_map[nth] * final_element_sign
       end
 
       private
 
-      def sign(n)
-        n.negative? && n.even? ? -1 : 1
+      def sign(nth)
+        nth.negative? && nth.even? ? -1 : 1
       end
 
-      def calculate_fibonacci(n)
-        if n.even?
-          even_fibonacci(n)
+      def calculate_fibonacci(nth)
+        if nth.even?
+          fibonacci_for_evens(nth)
         else
-          odd_fibonacci(n)
+          fibonacci_for_odd(nth)
         end
       end
 
-      def odd_fibonacci(n)
-        c = (n + 1) / 2
-        @fibs[c - 1] * @fibs[c - 1] + @fibs[c] * @fibs[c]
+      def fibonacci_for_odd(nth)
+        index = (nth + 1) / 2
+
+        @fibonacci_map[index - 1] * @fibonacci_map[index - 1] + @fibonacci_map[index] * @fibonacci_map[index]
       end
 
-      def even_fibonacci(n)
-        c = n / 2
-        (2 * @fibs[c - 1] + @fibs[c]) * @fibs[c]
+      def fibonacci_for_evens(nth)
+        index = nth / 2
+
+        (2 * @fibonacci_map[index - 1] + @fibonacci_map[index]) * @fibonacci_map[index]
       end
     end
   end
