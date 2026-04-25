@@ -5,7 +5,6 @@ require 'matrix'
 module Calculators
   module MatrixCalculator
     class Calculator
-
       SOFT_LIMIT = 10_000_000
 
       def call(nth)

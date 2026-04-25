@@ -36,7 +36,7 @@ module Calculators
       # returns -1 if nth is negative and even
       def sign(nth)
         return 1 unless nth.negative?
-        
+
         nth.even? ? -1 : 1
       end
 

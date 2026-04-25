@@ -31,8 +31,6 @@ module Fibonator
         Calculators::Recursive::Calculator.new
       when :dijkstra
         Calculators::Dijkstra::Calculator.new
-      else
-        nil
       end
     end
   end
