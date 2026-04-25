@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
+require 'matrix'
+
 module Calculators
   module MatrixCalculator
     class Calculator
-      require 'matrix'
 
       SOFT_LIMIT = 10_000_000
-
-      def initialize; end
 
       def call(nth)
         calculate_nth_matrix(nth)
