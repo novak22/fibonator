@@ -6,59 +6,54 @@ module Fibonator
   module Calculators
     module Dijkstra
       class Calculator
-        DEFAULT_DECOMPOSER = Decomposer
-        INITIAL_FIBS = { 0 => 0, 1 => 1, 2 => 1, 3 => 2 }.freeze
         SOFT_LIMIT = 100_000_000
+        SEED = { 0 => 0, 1 => 1, 2 => 1, 3 => 2 }.freeze
 
-        def initialize(decomposer = DEFAULT_DECOMPOSER)
-          @fibonacci_map = INITIAL_FIBS.dup
+        def initialize(decomposer: Decomposer)
+          @fibonacci_map = SEED.dup
           @decomposer = decomposer.new
         end
 
         def call(nth)
-          final_element_sign = sign(nth)
-          nth = nth.abs
+          sign = negafibonacci_sign(nth)
+          abs_nth = nth.abs
 
-          return @fibonacci_map[nth] * final_element_sign if @fibonacci_map.key?(nth)
+          return @fibonacci_map[abs_nth] * sign if @fibonacci_map.key?(abs_nth)
 
-          components = @decomposer.call(nth)
+          @decomposer.call(abs_nth).reverse_each do |n|
+            next if @fibonacci_map.key?(n)
 
-          components.reverse_each do |e|
-            next if @fibonacci_map[e]
-
-            @fibonacci_map[e] = calculate_fibonacci(e)
+            @fibonacci_map[n] = fibonacci(n)
           end
 
-          @fibonacci_map[nth] * final_element_sign
+          @fibonacci_map[abs_nth] * sign
+        end
+
+        def soft_limit
+          SOFT_LIMIT
         end
 
         private
 
-        # returns -1 if nth is negative and even
-        def sign(nth)
-          return 1 unless nth.negative?
-
-          nth.even? ? -1 : 1
+        # Negafibonacci sign: F(-n) = (-1)^(n+1) * F(n), so sign is -1 when n is negative and even.
+        def negafibonacci_sign(nth)
+          nth.negative? && nth.even? ? -1 : 1
         end
 
-        def calculate_fibonacci(nth)
-          if nth.even?
-            fibonacci_for_evens(nth)
-          else
-            fibonacci_for_odd(nth)
-          end
+        def fibonacci(nth)
+          nth.even? ? fibonacci_even(nth) : fibonacci_odd(nth)
         end
 
-        def fibonacci_for_odd(nth)
-          index = (nth + 1) / 2
-
-          (@fibonacci_map[index - 1] * @fibonacci_map[index - 1]) + (@fibonacci_map[index] * @fibonacci_map[index])
+        # F(2k-1) = F(k)^2 + F(k-1)^2
+        def fibonacci_odd(nth)
+          k = (nth + 1) / 2
+          (@fibonacci_map[k] * @fibonacci_map[k]) + (@fibonacci_map[k - 1] * @fibonacci_map[k - 1])
         end
 
-        def fibonacci_for_evens(nth)
-          index = nth / 2
-
-          ((2 * @fibonacci_map[index - 1]) + @fibonacci_map[index]) * @fibonacci_map[index]
+        # F(2k) = F(k) * (2*F(k-1) + F(k))
+        def fibonacci_even(nth)
+          k = nth / 2
+          @fibonacci_map[k] * ((2 * @fibonacci_map[k - 1]) + @fibonacci_map[k])
         end
       end
     end

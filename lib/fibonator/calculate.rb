@@ -6,7 +6,7 @@ require_relative 'calculators/dijkstra/calculator'
 
 module Fibonator
   class Calculate
-    attr_reader :calculator
+    private attr_reader :calculator
 
     def initialize(calculator)
       @calculator = calculator_class_from_symbol(calculator)
@@ -20,19 +20,16 @@ module Fibonator
     end
 
     def soft_limit
-      @calculator.class::SOFT_LIMIT
+      @calculator.soft_limit
     end
 
     private
 
     def calculator_class_from_symbol(calculator_symbol)
       case calculator_symbol
-      when :matrix
-        Fibonator::Calculators::MatrixCalculator::Calculator.new
-      when :recursive
-        Fibonator::Calculators::Recursive::Calculator.new
-      when :dijkstra
-        Fibonator::Calculators::Dijkstra::Calculator.new
+      when :dijkstra  then Calculators::Dijkstra::Calculator.new
+      when :matrix    then Calculators::MatrixCalculator::Calculator.new
+      when :recursive then Calculators::Recursive::Calculator.new
       end
     end
   end

@@ -8,19 +8,26 @@ module Fibonator
       class Calculator
         SOFT_LIMIT = 10_000_000
 
+        # Q-matrix: [[1,1],[1,0]]^n gives F(n+1) at [0,0] and F(n) at [1,0].
+        Q_MATRIX = Matrix[[1, 1], [1, 0]].freeze
+
         def call(nth)
-          calculate_nth_matrix(nth)
+          compute(nth)
+        end
+
+        def soft_limit
+          SOFT_LIMIT
         end
 
         private
 
-        def calculate_nth_matrix(nth)
-          negative = nth.negative?
+        def compute(nth)
           abs_nth = nth.abs
 
-          result = (Matrix[[1, 1], [1, 0]]**abs_nth)[1, 0]
+          result = (Q_MATRIX**abs_nth)[1, 0]
 
-          return result unless negative
+          # Negafibonacci: F(-n) = (-1)^(n+1) * F(n)
+          return result unless nth.negative?
 
           abs_nth.even? ? -result : result
         end
