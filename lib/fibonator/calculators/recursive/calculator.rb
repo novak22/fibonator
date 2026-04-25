@@ -4,26 +4,28 @@ module Fibonator
   module Calculators
     module Recursive
       class Calculator
-        private attr_reader :nth_array
-
         SOFT_LIMIT = 10_000
 
         def initialize
-          @nth_array = { 0 => 0, 1 => 1, 2 => 1 }
+          @memo = { 0 => 0, 1 => 1, 2 => 1 }
         end
 
         def call(nth)
-          calculate_nth_naive(nth)
+          compute(nth)
+        end
+
+        def soft_limit
+          SOFT_LIMIT
         end
 
         private
 
-        def calculate_nth_naive(nth)
-          return @nth_array[nth] if @nth_array.key?(nth)
+        attr_reader :memo
 
-          el = calculate_nth_naive(nth - 1) + calculate_nth_naive(nth - 2)
+        def compute(nth)
+          return memo[nth] if memo.key?(nth)
 
-          @nth_array[nth] = el
+          memo[nth] = compute(nth - 1) + compute(nth - 2)
         end
       end
     end

@@ -87,7 +87,7 @@ RSpec.describe Fibonator do
 
     it 'recursive raises ArgumentError for negative indices' do
       expect { subject.nth_element(-1, calculator: :recursive) }
-        .to raise_error(ArgumentError, /:recursive calculator does not support negative indices/)
+        .to raise_error(ArgumentError, /:recursive does not support negative indices/)
     end
   end
 
@@ -165,16 +165,15 @@ RSpec.describe Fibonator do
 
     context 'soft limits rewrite' do
       context 'recursive' do
-        let(:calculation_method) { :recursive }
-        let(:soft_limit) { subject.soft_limit(calculation_method) }
+        # Use a small custom limit so bypassing it doesn't hit Ruby's real stack depth.
+        let(:custom_limit) { 100 }
 
         it 'overwrites soft limit' do
           expect do
-            subject.nth_element(soft_limit + 1, calculator: :recursive)
+            subject.nth_element(custom_limit + 1, calculator: :recursive, soft_limit: custom_limit)
           end.to raise_error(ArgumentError, over_soft_limit_message)
           expect do
-            subject.nth_element(soft_limit + 1, calculator: :recursive,
-                                                soft_limit: 0)
+            subject.nth_element(custom_limit + 1, calculator: :recursive, soft_limit: 0)
           end.not_to raise_error
         end
       end
