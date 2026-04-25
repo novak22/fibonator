@@ -2,62 +2,64 @@
 
 require_relative 'decomposer'
 
-module Calculators
-  module Dijkstra
-    class Calculator
-      DEFAULT_DECOMPOSER = Decomposer
-      INITIAL_FIBS = { 0 => 0, 1 => 1, 2 => 1, 3 => 2 }.freeze
-      SOFT_LIMIT = 100_000_000
+module Fibonator
+  module Calculators
+    module Dijkstra
+      class Calculator
+        DEFAULT_DECOMPOSER = Decomposer
+        INITIAL_FIBS = { 0 => 0, 1 => 1, 2 => 1, 3 => 2 }.freeze
+        SOFT_LIMIT = 100_000_000
 
-      def initialize(decomposer = DEFAULT_DECOMPOSER)
-        @fibonacci_map = INITIAL_FIBS.dup
-        @decomposer = decomposer.new
-      end
-
-      def call(nth)
-        final_element_sign = sign(nth)
-        nth = nth.abs
-
-        return @fibonacci_map[nth] * final_element_sign if @fibonacci_map.key?(nth)
-
-        components = @decomposer.call(nth)
-
-        components.reverse_each do |e|
-          next if @fibonacci_map[e]
-
-          @fibonacci_map[e] = calculate_fibonacci(e)
+        def initialize(decomposer = DEFAULT_DECOMPOSER)
+          @fibonacci_map = INITIAL_FIBS.dup
+          @decomposer = decomposer.new
         end
 
-        @fibonacci_map[nth] * final_element_sign
-      end
+        def call(nth)
+          final_element_sign = sign(nth)
+          nth = nth.abs
 
-      private
+          return @fibonacci_map[nth] * final_element_sign if @fibonacci_map.key?(nth)
 
-      # returns -1 if nth is negative and even
-      def sign(nth)
-        return 1 unless nth.negative?
+          components = @decomposer.call(nth)
 
-        nth.even? ? -1 : 1
-      end
+          components.reverse_each do |e|
+            next if @fibonacci_map[e]
 
-      def calculate_fibonacci(nth)
-        if nth.even?
-          fibonacci_for_evens(nth)
-        else
-          fibonacci_for_odd(nth)
+            @fibonacci_map[e] = calculate_fibonacci(e)
+          end
+
+          @fibonacci_map[nth] * final_element_sign
         end
-      end
 
-      def fibonacci_for_odd(nth)
-        index = (nth + 1) / 2
+        private
 
-        @fibonacci_map[index - 1] * @fibonacci_map[index - 1] + @fibonacci_map[index] * @fibonacci_map[index]
-      end
+        # returns -1 if nth is negative and even
+        def sign(nth)
+          return 1 unless nth.negative?
 
-      def fibonacci_for_evens(nth)
-        index = nth / 2
+          nth.even? ? -1 : 1
+        end
 
-        (2 * @fibonacci_map[index - 1] + @fibonacci_map[index]) * @fibonacci_map[index]
+        def calculate_fibonacci(nth)
+          if nth.even?
+            fibonacci_for_evens(nth)
+          else
+            fibonacci_for_odd(nth)
+          end
+        end
+
+        def fibonacci_for_odd(nth)
+          index = (nth + 1) / 2
+
+          (@fibonacci_map[index - 1] * @fibonacci_map[index - 1]) + (@fibonacci_map[index] * @fibonacci_map[index])
+        end
+
+        def fibonacci_for_evens(nth)
+          index = nth / 2
+
+          ((2 * @fibonacci_map[index - 1]) + @fibonacci_map[index]) * @fibonacci_map[index]
+        end
       end
     end
   end

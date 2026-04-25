@@ -15,6 +15,11 @@ RSpec.describe Fibonator do
       expect(subject.nth_element(8, calculator: calculator)).to eq(21)
       expect(subject.nth_element(9, calculator: calculator)).to eq(34)
     end
+
+    it 'returns Integer type' do
+      expect(subject.nth_element(5, calculator: calculator)).to be_a(Integer)
+      expect(subject.nth_element(1, calculator: calculator)).to be_a(Integer)
+    end
   end
 
   shared_examples 'medium numbers' do
@@ -29,7 +34,7 @@ RSpec.describe Fibonator do
   end
 
   it 'has a version number' do
-    expect(Fibonator::VERSION).not_to be nil
+    expect(Fibonator::VERSION).not_to be_nil
   end
 
   it 'raises error on invalid argument' do
@@ -38,9 +43,21 @@ RSpec.describe Fibonator do
     expect { subject.nth_element([3]) }.to raise_error(ArgumentError, 'Only numbers are allowed')
   end
 
+  it 'raises error for invalid calculator' do
+    expect { subject.nth_element(5, calculator: :unknown) }.to raise_error(ArgumentError, /Invalid calculator/)
+  end
+
   it 'accepts integer as a string' do
     expect(subject.nth_element('3')).to eq(2)
     expect(subject.nth_element('42')).to eq(267_914_296)
+  end
+
+  it 'rejects float strings' do
+    expect { subject.nth_element('3.14') }.to raise_error(ArgumentError, 'Only numbers are allowed')
+  end
+
+  it 'rejects strings with leading spaces' do
+    expect { subject.nth_element(' 3') }.to raise_error(ArgumentError, 'Only numbers are allowed')
   end
 
   it 'nth element is 0' do
@@ -49,6 +66,29 @@ RSpec.describe Fibonator do
 
   it 'nth element is 1000' do
     expect(subject.nth_element(1000).to_s.length).to eq(209)
+  end
+
+  it 'log_time: true still returns the result' do
+    expect(subject.nth_element(5, log_time: true)).to eq(5)
+  end
+
+  describe 'negative indices' do
+    it 'dijkstra supports negative indices' do
+      expect(subject.nth_element(-1, calculator: :dijkstra)).to eq(1)
+      expect(subject.nth_element(-2, calculator: :dijkstra)).to eq(-1)
+      expect(subject.nth_element(-6, calculator: :dijkstra)).to eq(-8)
+      expect(subject.nth_element(-7, calculator: :dijkstra)).to eq(13)
+    end
+
+    it 'matrix supports negative indices' do
+      expect(subject.nth_element(-1, calculator: :matrix)).to eq(1)
+      expect(subject.nth_element(-6, calculator: :matrix)).to eq(-8)
+    end
+
+    it 'recursive raises ArgumentError for negative indices' do
+      expect { subject.nth_element(-1, calculator: :recursive) }
+        .to raise_error(ArgumentError, /:recursive calculator does not support negative indices/)
+    end
   end
 
   describe 'big numbers' do
@@ -72,9 +112,11 @@ RSpec.describe Fibonator do
 
     context 'matrix' do
       let(:calculator) { :matrix }
+
       it 'numbers >11000' do
         expect { subject.nth_element(11_001, calculator: calculator) }.not_to raise_error
       end
+
       it 'numbers >10_000_000' do
         expect { subject.nth_element(1_000_000, calculator: calculator) }.not_to raise_error
         expect do
@@ -139,10 +181,22 @@ RSpec.describe Fibonator do
     end
   end
 
+  describe '.soft_limit' do
+    it 'returns a positive Integer for each calculator' do
+      %i[recursive matrix dijkstra].each do |calc|
+        expect(subject.soft_limit(calc)).to be_a(Integer).and be_positive
+      end
+    end
+
+    it 'returns dijkstra limit by default' do
+      expect(subject.soft_limit).to eq(subject.soft_limit(:dijkstra))
+    end
+  end
+
   describe 'each calculator' do
     %i[recursive matrix dijkstra].each do |current_calculator|
       context "testing calculator: #{current_calculator}" do
-        let(:calculator) { :dijkstra }
+        let(:calculator) { current_calculator }
 
         it_behaves_like 'small numbers'
         it_behaves_like 'medium numbers'

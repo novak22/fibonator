@@ -1,0 +1,51 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+  SuggestExtensions: false
+  Exclude:
+    - "*.gemspec"
+    - "bin/**/*"
+
+plugins:
+  - rubocop-rspec
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+
+Style/Documentation:
+  Exclude:
+    - "lib/fibonator/calculators/**/*"
+    - "lib/fibonator/calculate.rb"
+
+# RSpec-specific configuration
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 5
