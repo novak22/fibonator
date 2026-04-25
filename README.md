@@ -1,7 +1,6 @@
 # Fibonator
 
-Simple gem for calculating nth element of Fibonacci sequence.
-
+A Ruby gem for calculating the nth element of the Fibonacci sequence using three different algorithms: recursive (memoized), matrix exponentiation, and Dijkstra's algorithm.
 
 ## Installation
 
@@ -21,33 +20,66 @@ Or install it yourself as:
 
 ## Usage
 
-To get nth element of Fibonacci sequence run:
-    
+### Basic usage
+
 ```ruby
 Fibonator.nth_element(n)
-````
+```
 
-To overwrite SOFT_LIMIT:
+### Choosing a calculator
+
+```ruby
+Fibonator.nth_element(n, calculator: :dijkstra)   # default
+Fibonator.nth_element(n, calculator: :matrix)
+Fibonator.nth_element(n, calculator: :recursive)
+```
+
+### Overriding the soft limit
+
+Pass `soft_limit: 0` to disable the limit entirely:
 
 ```ruby
 Fibonator.nth_element(n, soft_limit: 0)
+Fibonator.nth_element(n, soft_limit: 500_000)
 ```
 
-To use different calculator:
+### Checking the soft limit for a calculator
 
 ```ruby
-Fibonator.nth_element(n, calculator: :recursive)
-Fibonator.nth_element(n, calculator: :matrix)
+Fibonator.soft_limit             # default (:dijkstra) => 100_000_000
+Fibonator.soft_limit(:recursive) # => 10_000
+Fibonator.soft_limit(:matrix)    # => 10_000_000
 ```
 
-To get recommended soft limit:
+### Timing
+
+Print elapsed time to stdout:
 
 ```ruby
-Fibonator.soft_limit # for default calculator
-
-Fibonator.soft_limit(:recursive)
-Fibonator.soft_limit(:matrix)
+Fibonator.nth_element(n, log_time: true)
+# => total time: 0.000123 seconds
 ```
+
+### Negative indices
+
+The Dijkstra and matrix calculators support negative Fibonacci indices (negafibonacci convention: `F(-n) = (-1)^(n+1) * F(n)`):
+
+```ruby
+Fibonator.nth_element(-1)   #=> 1
+Fibonator.nth_element(-2)   #=> -1
+Fibonator.nth_element(-6)   #=> -8
+Fibonator.nth_element(-7)   #=> 13
+```
+
+The `:recursive` calculator does not support negative indices and will raise `ArgumentError`.
+
+## Calculators
+
+| Calculator    | Soft limit    | Negative support | Notes                                       |
+|---------------|---------------|------------------|---------------------------------------------|
+| `:dijkstra`   | 100,000,000   | Yes              | Fastest for large n; recommended default    |
+| `:matrix`     | 10,000,000    | Yes              | Matrix exponentiation; good for medium n    |
+| `:recursive`  | 10,000        | No               | Memoized recursion; suitable for small n    |
 
 ## Development
 

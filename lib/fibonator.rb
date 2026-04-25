@@ -12,22 +12,26 @@ module Fibonator
 
   DEFAULT_CALCULATOR = :dijkstra
 
-  def nth_element(nth, soft_limit: nil, calculator: DEFAULT_CALCULATOR, log_time: false, return_result: true)
+  def nth_element(nth, soft_limit: nil, calculator: DEFAULT_CALCULATOR, log_time: false)
     raise ArgumentError, 'Only numbers are allowed' unless valid_argument?(nth)
 
     nth = Integer(nth) if nth.is_a?(String)
-    calculator = Fibonator::Calculate.new(calculator)
-    soft_limit ||= calculator.soft_limit
+    calc = Fibonator::Calculate.new(calculator)
+    soft_limit ||= calc.soft_limit
 
     raise ArgumentError, "Number too big. Limit set to: #{soft_limit}" if out_of_limit?(nth, soft_limit)
 
-    start_time = Time.now
-    num = calculator.nth_element(nth)
-    total_time = Time.now - start_time
+    if nth.negative? && calculator == :recursive
+      raise ArgumentError, ':recursive calculator does not support negative indices'
+    end
+
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    num = calc.nth_element(nth)
+    total_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
 
     puts "total time: #{total_time}" if log_time
 
-    num if return_result
+    num
   end
 
   def soft_limit(calculator = DEFAULT_CALCULATOR)
@@ -38,11 +42,10 @@ module Fibonator
   private
 
   def valid_argument?(arg)
-    arg.is_a?(Integer) || begin
-      arg == arg.to_i.to_s
-    rescue StandardError
-      false
-    end
+    return true if arg.is_a?(Integer)
+    return false unless arg.is_a?(String)
+
+    arg == arg.to_i.to_s
   end
 
   def out_of_limit?(arg, limit)

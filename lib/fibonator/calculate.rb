@@ -10,7 +10,9 @@ module Fibonator
 
     def initialize(calculator)
       @calculator = calculator_class_from_symbol(calculator)
-      raise ArgumentError, 'Invalid calculator' unless @calculator
+      return if @calculator
+
+      raise ArgumentError, "Invalid calculator: #{calculator}. Valid options: :dijkstra, :matrix, :recursive"
     end
 
     def nth_element(nth)
@@ -26,11 +28,11 @@ module Fibonator
     def calculator_class_from_symbol(calculator_symbol)
       case calculator_symbol
       when :matrix
-        Calculators::MatrixCalculator::Calculator.new
+        Fibonator::Calculators::MatrixCalculator::Calculator.new
       when :recursive
-        Calculators::Recursive::Calculator.new
+        Fibonator::Calculators::Recursive::Calculator.new
       when :dijkstra
-        Calculators::Dijkstra::Calculator.new
+        Fibonator::Calculators::Dijkstra::Calculator.new
       end
     end
   end
