@@ -6,11 +6,9 @@ require_relative 'calculators/dijkstra/calculator'
 
 module Fibonator
   class Calculate
-    attr_accessor :calculator
+    attr_reader :calculator
 
-    DEFAULT_CALCULATOR = :dijkstra
-
-    def initialize(calculator = DEFAULT_CALCULATOR)
+    def initialize(calculator)
       @calculator = calculator_class_from_symbol(calculator)
       raise ArgumentError, 'Invalid calculator' unless @calculator
     end
@@ -33,8 +31,6 @@ module Fibonator
         Calculators::Recursive::Calculator.new
       when :dijkstra
         Calculators::Dijkstra::Calculator.new
-      else
-        false
       end
     end
   end

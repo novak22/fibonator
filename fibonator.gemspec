@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Calculates nth element of Fibonacci sequence.'
   spec.homepage      = 'https://github.com/novak22/fibonator'
   spec.license       = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.3.0')
+  spec.required_ruby_version = Gem::Requirement.new('>= 3.0')
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '>= 1.17'
+  spec.add_development_dependency 'matrix'
   spec.add_development_dependency 'rake', '>= 10.0'
   spec.add_development_dependency 'rspec', '>= 3.9.3'
 end

@@ -3,7 +3,7 @@
 module Calculators
   module Recursive
     class Calculator
-      attr_reader :nth_array
+      private attr_reader :nth_array
 
       SOFT_LIMIT = 10_000
 

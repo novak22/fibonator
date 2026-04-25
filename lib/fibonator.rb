@@ -12,7 +12,7 @@ module Fibonator
 
   DEFAULT_CALCULATOR = :dijkstra
 
-  def nth_element(nth, soft_limit: nil, calculator: DEFAULT_CALCULATOR)
+  def nth_element(nth, soft_limit: nil, calculator: DEFAULT_CALCULATOR, log_time: false, return_result: true)
     raise ArgumentError, 'Only numbers are allowed' unless valid_argument?(nth)
 
     nth = Integer(nth) if nth.is_a?(String)
@@ -21,7 +21,13 @@ module Fibonator
 
     raise ArgumentError, "Number too big. Limit set to: #{soft_limit}" if out_of_limit?(nth, soft_limit)
 
-    calculator.nth_element(nth)
+    start_time = Time.now
+    num = calculator.nth_element(nth)
+    total_time = Time.now - start_time
+
+    puts "total time: #{total_time}" if log_time
+
+    num if return_result
   end
 
   def soft_limit(calculator = DEFAULT_CALCULATOR)

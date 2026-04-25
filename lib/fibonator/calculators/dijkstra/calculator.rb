@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'decomposer'
+
 module Calculators
   module Dijkstra
     class Calculator
-      require_relative 'decomposer'
       DEFAULT_DECOMPOSER = Decomposer
       INITIAL_FIBS = { 0 => 0, 1 => 1, 2 => 1, 3 => 2 }.freeze
       SOFT_LIMIT = 100_000_000
@@ -32,8 +33,11 @@ module Calculators
 
       private
 
+      # returns -1 if nth is negative and even
       def sign(nth)
-        nth.negative? && nth.even? ? -1 : 1
+        return 1 unless nth.negative?
+
+        nth.even? ? -1 : 1
       end
 
       def calculate_fibonacci(nth)
